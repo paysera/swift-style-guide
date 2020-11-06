@@ -1,16 +1,12 @@
-# The Official raywenderlich.com Swift Style Guide.
+# Paysera Swift Style Guide
 ### Updated for Swift 5
-
-This style guide is different from others you may see, because the focus is centered on readability for print and the web. We created this style guide to keep the code in our books, tutorials, and starter kits nice and consistent — even though we have many different authors working on the books.
 
 Our overarching goals are clarity, consistency and brevity, in that order.
 
 ## Table of Contents
 
 * [Correctness](#correctness)
-* [Using SwiftLint](#using-swiftlint)
 * [Naming](#naming)
-  * [Prose](#prose)
   * [Delegates](#delegates)
   * [Use Type Inferred Context](#use-type-inferred-context)
   * [Generics](#generics)
@@ -60,10 +56,6 @@ Our overarching goals are clarity, consistency and brevity, in that order.
 
 Strive to make your code compile without warnings. This rule informs many style decisions such as using `#selector` types instead of string literals.
 
-## Using SwiftLint
-
-When writing for raywenderlich.com, you are strongly encouraged — and some teams may require — to use our SwiftLint configuration. See the [SwiftLint Policy](SWIFTLINT.markdown) for more information.
-
 ## Naming
 
 Descriptive and consistent naming makes software easier to read and understand. Use the Swift naming conventions described in the [API Design Guidelines](https://swift.org/documentation/api-design-guidelines/). Some key takeaways include:
@@ -95,24 +87,9 @@ Descriptive and consistent naming makes software easier to read and understand. 
 - labeling closure and tuple parameters
 - taking advantage of default parameters
 
-### Prose
-
-When referring to methods in prose, being unambiguous is critical. To refer to a method name, use the simplest form possible.
-
-1. Write the method name with no parameters.  **Example:** Next, you need to call `addTarget`.
-2. Write the method name with argument labels.  **Example:** Next, you need to call `addTarget(_:action:)`.
-3. Write the full method name with argument labels and types. **Example:** Next, you need to call `addTarget(_: Any?, action: Selector?)`.
-
-For the above example using `UIGestureRecognizer`, 1 is unambiguous and preferred.
-
-**Pro Tip:** You can use Xcode's jump bar to lookup methods with argument labels. If you’re particularly good at mashing lots of keys simultaneously, put the cursor in the method name and press **Shift-Control-Option-Command-C** (all 4 modifier keys) and Xcode will kindly put the signature on your clipboard.
-
-![Methods in Xcode jump bar](screens/xcode-jump-bar.png)
-
-
 ### Class Prefixes
 
-Swift types are automatically namespaced by the module that contains them and you should not add a class prefix such as RW. If two names from different modules collide you can disambiguate by prefixing the type name with the module name. However, only specify the module name when there is possibility for confusion, which should be rare.
+Swift types are automatically namespaced by the module that contains them and you should not add a class prefix. If two names from different modules collide you can disambiguate by prefixing the type name with the module name. However, only specify the module name when there is possibility for confusion, which should be rare. 
 
 ```swift
 import SomeModule
@@ -120,9 +97,26 @@ import SomeModule
 let myClass = MyModule.UsefulClass()
 ```
 
+**Note**: entities from our public libraries (`swift-lib-wallet-sdk`, `swift-lib-common-sdk`, etc.) are exception and you should prefix them with `PS` prefix.
+
+```swift
+import ObjectMapper
+import PayseraCommonSDK
+
+public class PSIdentificationRequestsFilter: PSBaseFilter {
+    public var statuses: [String]?
+
+    public override func mapping(map: Map) {
+        super.mapping(map: map)
+        statuses        <- map["statuses"]
+    }
+}
+
+```
+
 ### Delegates
 
-When creating custom delegate methods, an unnamed first parameter should be the delegate source. (UIKit contains numerous examples of this.)
+When creating custom delegate methods, for **reusable components**, an unnamed first parameter should be the delegate source. (UIKit contains numerous examples of this.)
 
 **Preferred**:
 ```swift
@@ -190,7 +184,7 @@ let colour = "red"
 
 ## Code Organization
 
-Use extensions to organize your code into logical blocks of functionality. Each extension should be set off with a `// MARK: -` comment to keep things well-organized.
+Use extensions to organize your code into logical blocks of functionality. If it makes sense, each extension should be set off with a `// MARK: -` comment to keep things well-organized.
 
 ### Protocol Conformance
 
@@ -222,13 +216,9 @@ class MyViewController: UIViewController, UITableViewDataSource, UIScrollViewDel
 
 Since the compiler does not allow you to re-declare protocol conformance in a derived class, it is not always required to replicate the extension groups of the base class. This is especially true if the derived class is a terminal class and a small number of methods are being overridden. When to preserve the extension groups is left to the discretion of the author.
 
-For UIKit view controllers, consider grouping lifecycle, custom accessors, and IBAction in separate class extensions.
-
 ### Unused Code
 
-Unused (dead) code, including Xcode template code and placeholder comments should be removed. An exception is when your tutorial or book instructs the user to use the commented code.
-
-Aspirational methods not directly associated with the tutorial whose implementation simply calls the superclass should also be removed. This includes any empty/unused UIApplicationDelegate methods.
+Unused (dead) code, including Xcode template code and placeholder comments should be removed.
 
 **Preferred**:
 ```swift
@@ -288,12 +278,10 @@ var deviceModels: [String]
 
 ## Spacing
 
-* Indent using 2 spaces rather than tabs to conserve space and help prevent line wrapping. Be sure to set this preference in Xcode and in the Project settings as shown below:
+* Indent using 4 spaces.
 
-![Xcode indent settings](screens/indentation.png)
-
-* Method braces and other braces (`if`/`else`/`switch`/`while` etc.) always open on the same line as the statement but close on a new line.
-* Tip: You can re-indent by selecting some code (or **Command-A** to select all) and then **Control-I** (or **Editor ▸ Structure ▸ Re-Indent** in the menu). Some of the Xcode template code will have 4-space tabs hard coded, so this is a good way to fix that.
+* Method braces and other braces (`if`/`else`/`switch`/`while` etc.) always (see multiline statements wrapping below) open on the same line as the statement but close on a new line.
+* Tip: You can re-indent by selecting some code (or **Command-A** to select all) and then **Control-I** (or **Editor ▸ Structure ▸ Re-Indent** in the menu). 
 
 **Preferred**:
 ```swift
@@ -312,6 +300,33 @@ if user.isHappy
 }
 else {
   // Do something else
+}
+```
+
+* Statements with multiple conditions should wrap each condition to a new line. If few conditions fit before reaching page guide (see #todo insert link), you can fit them on the same line, however, when deciding such things keep readability as the main priority.
+
+**Preferred**:
+```swift
+if
+    let userID = wallet.owner.userID,
+    let user = userRepository.find(id: userID),
+    user.isHappy
+{
+    // Do something
+} else {
+    // Do something else    
+}
+```
+
+**Not Preferred**:
+```swift
+if
+    let userID = wallet.owner.userID,
+    let user = userRepository.find(id: userID),
+    user.isHappy {
+    // Do something
+} else {
+    // Do something else      
 }
 ```
 
@@ -343,11 +358,23 @@ class TestDatabase : Database {
 
 ## Comments
 
-When they are needed, use comments to explain **why** a particular piece of code does something. Comments must be kept up-to-date or deleted.
+* When they are needed, use comments to explain **why** a particular piece of code does something. Comments must be kept up-to-date or deleted.
 
-Avoid block comments inline with code, as the code should be as self-documenting as possible. _Exception: This does not apply to those comments used to generate documentation._
+* Avoid block comments inline with code, as the code should be as self-documenting as possible. _Exception: This does not apply to those comments used to generate documentation._
 
-Avoid the use of C-style comments (`/* ... */`). Prefer the use of double- or triple-slash.
+* For short-lived todos use `#warning` directive.
+
+```swift
+#warning("TODO: add translation") 
+```
+* Legacy methods that shouldn't be used anymore should be marked with `@available` declaration.
+
+```swift
+@available(*, deprecated, message: "Use function(from:) instead.")
+private func legacyFunction(from a: String) -> String {
+    // legacy stuff
+}
+```
 
 ## Classes and Structures
 
@@ -424,7 +451,7 @@ For conciseness, if a computed property is read-only, omit the get clause. The g
 **Preferred**:
 ```swift
 var diameter: Double {
-  return radius * 2
+  radius * 2
 }
 ```
 
@@ -432,14 +459,14 @@ var diameter: Double {
 ```swift
 var diameter: Double {
   get {
-    return radius * 2
+    radius * 2
   }
 }
 ```
 
 ### Final
 
-Marking classes or members as `final` in tutorials can distract from the main topic and is not required. Nevertheless, use of `final` can sometimes clarify your intent and is worth the cost. In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
+Use `final` when it's appropriate. Start with `final` and adjust when needed.  In the below example, `Box` has a particular purpose and customization in a derived class is not intended. Marking it `final` makes that clear.
 
 ```swift
 // Turn any generic type into a reference type using this Box class.
@@ -479,7 +506,7 @@ Don't use `(Void)` to represent the lack of an input; simply use `()`. Use `Void
 **Preferred**:
 
 ```swift
-func updateConstraints() -> Void {
+func updateConstraints() {
   // magic happens here
 }
 
@@ -511,7 +538,8 @@ let success = reticulateSplines(
   spline: splines,
   adjustmentFactor: 1.3,
   translateConstant: 2,
-  comment: "normalize the display")
+  comment: "normalize the display"
+)
 ```
 
 ## Closure Expressions
