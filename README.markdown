@@ -348,7 +348,9 @@ class TestDatabase : Database {
 }
 ```
 
-* Long lines should be wrapped at around 70 characters. A hard limit is intentionally not specified.
+* Long lines should be wrapped at around 100 characters (it's not a hard limit, so there might be few characters leeway). To have visual clue, enable page guide from Xcode settings:
+
+![Page guide](screens/page-guide.png)
 
 * Avoid trailing whitespaces at the ends of lines.
 
