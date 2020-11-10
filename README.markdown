@@ -571,6 +571,16 @@ UIView.animate(withDuration: 1.0, animations: {
     self.myView.removeFromSuperview()
 }
 ```
+However, if API is updated (omitting label doesn't hurt readability) for [SE-0279](https://github.com/apple/swift-evolution/blob/master/proposals/0279-multiple-trailing-closures.md) omitting labels and using multiple trailing closures is allowed.
+
+```swift
+// Multiple trailing closure arguments
+UIView.animate(withDuration: 0.3) {
+    self.view.alpha = 0
+} completion: { _ in
+    self.view.removeFromSuperview()
+}
+```
 
 For single-expression closures where the context is clear, use implicit returns:
 
