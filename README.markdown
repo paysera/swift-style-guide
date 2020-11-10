@@ -17,6 +17,7 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Unused Code](#unused-code)
   * [Minimal Imports](#minimal-imports)
 * [Spacing](#spacing)
+* [Line wrapping](#line-wrapping)
 * [Comments](#comments)
 * [Classes and Structures](#classes-and-structures)
   * [Use of Self](#use-of-self)
@@ -301,7 +302,7 @@ else {
 }
 ```
 
-* Statements with multiple conditions should wrap each condition to a new line. If few conditions fit before reaching page guide (see #todo insert link), you can fit them on the same line, however, when deciding such things keep readability as the main priority.
+* Statements with multiple conditions should wrap each condition to a new line. If few conditions fit before reaching page guide (see: [Line wrapping](#line-wrapping)), you can fit them on the same line, however, when deciding such things keep readability as the main priority.
 
 **Preferred**:
 ```swift
@@ -347,6 +348,8 @@ class TestDatabase : Database {
     var data :[String:CGFloat] = ["A" : 1.2, "B":3.2]
 }
 ```
+
+## Line wrapping
 
 * Long lines should be wrapped at around 100 characters (it's not a hard limit, so there might be few characters leeway). To have visual clue, enable page guide from Xcode settings:
 
