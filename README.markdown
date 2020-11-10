@@ -16,8 +16,8 @@ Our overarching goals are clarity, consistency and brevity, in that order.
   * [Protocol Conformance](#protocol-conformance)
   * [Unused Code](#unused-code)
   * [Minimal Imports](#minimal-imports)
-* [Spacing](#spacing)
-* [Line wrapping](#line-wrapping)
+  * [Spacing](#spacing)
+  * [Line wrapping](#line-wrapping)
 * [Comments](#comments)
 * [Classes and Structures](#classes-and-structures)
   * [Use of Self](#use-of-self)
@@ -275,7 +275,7 @@ import UIKit
 var deviceModels: [String]
 ```
 
-## Spacing
+### Spacing
 
 * Indent using 4 spaces.
 
@@ -349,7 +349,7 @@ class TestDatabase : Database {
 }
 ```
 
-## Line wrapping
+### Line wrapping
 
 * Long lines should be wrapped at around 100 characters (it's not a hard limit, so there might be few characters leeway). To have visual clue, enable page guide from Xcode settings:
 
