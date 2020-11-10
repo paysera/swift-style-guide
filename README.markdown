@@ -1,5 +1,5 @@
 # Paysera Swift Style Guide
-### Updated for Swift 5
+### Updated for Swift 5.3
 
 Our overarching goals are clarity, consistency and brevity, in that order.
 
