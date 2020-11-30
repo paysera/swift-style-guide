@@ -1057,6 +1057,23 @@ if let number1 = number1 {
     fatalError("impossible")
 }
 ```
+Always write `guard` execution body on a new line. The only exception is trivial cases where adding breakpoint doesn't make much sense:
+
+**Preferred**:
+```swift
+guard let payload = NotificationPayload(userInfo: userInfo) else {
+    return false
+}
+
+// Still okay as adding breakpoint doesn't make much sense
+guard let self = self else { return }
+guard let impossible = impossible else { fatalError("Edge case") }
+```
+
+**Not Preferred**:
+```swift
+guard let payload = NotificationPayload(userInfo: userInfo) else { return false }
+```
 
 ### Failing Guards
 
