@@ -603,6 +603,40 @@ let value = numbers
     .map { $0 + 10 }
 ```
 
+For cases where it might be useful to add breakpoints (i.e. promise or reactive pipelines) separate closure body (so it's easy to add breakpoint) and begin each operator on a new line:
+
+**Preferred**:
+```swift
+requestPromise
+    .then { _ in
+        self.authorizationsSynchronizationManager.synchronize(for: [accountNumber])
+    }
+    .done { [weak self] _ in
+        self?.presenter.handleSuccess()
+    }
+    .catch { [weak self] error in
+        self?.presenter.handleError(error)
+    }
+```
+
+**Not Preferred**:
+```swift
+requestPromise
+    .then { _ in self.authorizationsSynchronizationManager.synchronize(for: [accountNumber]) }
+    .done { [weak self] _ in self?.presenter.handleSuccess() }
+    .catch { [weak self] error in self?.presenter.handleError(error) }
+
+requestPromise
+    .then { _ in
+        self.authorizationsSynchronizationManager.synchronize(for: [accountNumber])
+    }.done { [weak self] _ in
+        self?.presenter.handleSuccess()
+    }.catch { [weak self] error in
+        self?.presenter.handleError(error)
+    } 
+    
+```
+
 ## Types
 
 Always use Swift's native types and expressions when available. Swift offers bridging to Objective-C so you can still use the full set of methods as needed.
