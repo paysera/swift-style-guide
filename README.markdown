@@ -603,6 +603,40 @@ let value = numbers
     .map { $0 + 10 }
 ```
 
+For cases where it might be useful to add breakpoints (i.e. promise or reactive pipelines) separate closure body (so it's easy to add breakpoint) and begin each operator on a new line:
+
+**Preferred**:
+```swift
+requestPromise
+    .then { _ in
+        self.authorizationsSynchronizationManager.synchronize(for: [accountNumber])
+    }
+    .done { [weak self] _ in
+        self?.presenter.handleSuccess()
+    }
+    .catch { [weak self] error in
+        self?.presenter.handleError(error)
+    }
+```
+
+**Not Preferred**:
+```swift
+requestPromise
+    .then { _ in self.authorizationsSynchronizationManager.synchronize(for: [accountNumber]) }
+    .done { [weak self] _ in self?.presenter.handleSuccess() }
+    .catch { [weak self] error in self?.presenter.handleError(error) }
+
+requestPromise
+    .then { _ in
+        self.authorizationsSynchronizationManager.synchronize(for: [accountNumber])
+    }.done { [weak self] _ in
+        self?.presenter.handleSuccess()
+    }.catch { [weak self] error in
+        self?.presenter.handleError(error)
+    } 
+    
+```
+
 ## Types
 
 Always use Swift's native types and expressions when available. Swift offers bridging to Objective-C so you can still use the full set of methods as needed.
@@ -1022,6 +1056,23 @@ if let number1 = number1 {
 } else {
     fatalError("impossible")
 }
+```
+Always write `guard` execution body on a new line. The only exception is trivial cases where adding breakpoint doesn't make much sense:
+
+**Preferred**:
+```swift
+guard let payload = NotificationPayload(userInfo: userInfo) else {
+    return false
+}
+
+// Still okay as adding breakpoint doesn't make much sense
+guard let self = self else { return }
+guard let impossible = impossible else { fatalError("Edge case") }
+```
+
+**Not Preferred**:
+```swift
+guard let payload = NotificationPayload(userInfo: userInfo) else { return false }
 ```
 
 ### Failing Guards
